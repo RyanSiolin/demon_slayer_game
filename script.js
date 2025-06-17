@@ -34,7 +34,7 @@ class Player {
             'd': false
         };
     }
-    update(deltaTime){
+    update(deltaTime, enemies){
         document.addEventListener("keydown", e => this.keys[e.key.toLowerCase()] = true);
         document.addEventListener("keyup", e => this.keys[e.key.toLowerCase()] = false);
         if (this.keys["w"]) this.y -= this.speed;
@@ -43,7 +43,14 @@ class Player {
         if (this.keys["d"]) this.x += this.speed*2;
         if (this.keys[" "]) this.action = 1;
         else if (this.frame === 0)this.action = 0;
-
+        if (this.action === 1) {
+            enemies.forEach(enemy => {
+                const dx = enemy.x - this.x;
+                const dy = enemy.y - this.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < enemy.height/3 + this.width/4) enemy.markedForDeletion = true;
+            });
+        };
         this.timeSinceFrame += deltaTime;
         if (this.timeSinceFrame > this.frameInterval){
             if (this.frame > this.maxFrame) this.frame = 0;
@@ -52,6 +59,10 @@ class Player {
         }
     }
     draw(){
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.beginPath();
+        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/3, 0, Math.PI*2);
+        ctx.stroke();
         ctx.drawImage(this.image, this.frame * this.spriteWidth, this.action * this.spriteHeight, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);
     }
@@ -95,6 +106,10 @@ class Enemy {
         }
     }
     draw(){
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.beginPath();
+        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/3, 0, Math.PI*2);
+        ctx.stroke();
         ctx.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);
     }
@@ -128,7 +143,7 @@ function animate(timestamp){
     [...enemies].forEach(object => object.draw());
     enemies = enemies.filter(object => !object.markedForDeletion);
     score -= Math.abs(qtdA - enemies.length);
-    player.update(deltaTime);
+    player.update(deltaTime, enemies);
     player.draw();
     requestAnimationFrame(animate);
 }

@@ -42,7 +42,7 @@ class Player {
         if (this.keys["a"]) this.x -= this.speed*2;
         if (this.keys["d"]) this.x += this.speed*2;
         if (this.keys[" "]) this.action = 1;
-        else this.action = 0;
+        else if (this.frame === 0)this.action = 0;
 
         this.timeSinceFrame += deltaTime;
         if (this.timeSinceFrame > this.frameInterval){

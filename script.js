@@ -17,12 +17,13 @@ class Player {
         this.spriteWidth = 100;
         this.spriteHeight = 100;
         this.sizeModifier = 3;
-        this.width = this.spriteWidth * this.sizeModifier;
+        this.width = this.spriteWidth * this.sizeModifier*1.5;
         this.height = this.spriteHeight * this.sizeModifier;
         this.y = 50;
         this.x = 250;
-        this.speed = 5;
+        this.speed = 10;
         this.frame = 0;
+        this.action = 0;
         this.maxFrame = 2;
         this.timeSinceFrame = 0;
         this.frameInterval = 100;
@@ -38,8 +39,10 @@ class Player {
         document.addEventListener("keyup", e => this.keys[e.key.toLowerCase()] = false);
         if (this.keys["w"]) this.y -= this.speed;
         if (this.keys["s"]) this.y += this.speed;
-        if (this.keys["a"]) this.x -= this.speed;
-        if (this.keys["d"]) this.x += this.speed;
+        if (this.keys["a"]) this.x -= this.speed*2;
+        if (this.keys["d"]) this.x += this.speed*2;
+        if (this.keys[" "]) this.action = 1;
+        else this.action = 0;
 
         this.timeSinceFrame += deltaTime;
         if (this.timeSinceFrame > this.frameInterval){
@@ -49,7 +52,7 @@ class Player {
         }
     }
     draw(){
-        ctx.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, 
+        ctx.drawImage(this.image, this.frame * this.spriteWidth, this.action * this.spriteHeight, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);
     }
 
@@ -63,7 +66,7 @@ class Enemy {
         this.spriteWidth = 293;
         this.spriteHeight = 155;
         this.sizeModifier = Math.random() * 0.4 + 0.6;
-        this.width = this.spriteWidth*this.sizeModifier;
+        this.width = this.spriteWidth*this.sizeModifier*1.5;
         this.height = this.spriteHeight*this.sizeModifier;
         this.x = Math.random() * (canvas.width - this.width);
         this.y = 0;

@@ -128,11 +128,6 @@ function drawScore(){
     ctx.fillText('Score: ' + score, 25, 65);
 }
 
-window.addEventListener('click', function(e){
-    const detectPixelColor = ctx.getImageData(e.x, e.y, 1, 1);
-    console.log(detectPixelColor);
-});
-
 function animate(timestamp){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let deltaTime = timestamp - lastTime;

@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 1050;
+canvas.height = 1050;
 let score = 100;
 ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
@@ -17,7 +17,7 @@ class Player {
         this.spriteWidth = 100;
         this.spriteHeight = 100;
         this.sizeModifier = 3;
-        this.width = this.spriteWidth * this.sizeModifier*1.5;
+        this.width = this.spriteWidth * this.sizeModifier;
         this.height = this.spriteHeight * this.sizeModifier;
         this.y = 50;
         this.x = 250;
@@ -70,6 +70,14 @@ class Player {
 }
 let player = new Player();
 
+class Smoke {
+    constructor(){
+        this.image = new Image();
+        this.image.src = 'boom.png';
+
+    }
+}
+
 class Enemy {
     constructor(){
         this.image = new Image();
@@ -77,7 +85,7 @@ class Enemy {
         this.spriteWidth = 293;
         this.spriteHeight = 155;
         this.sizeModifier = Math.random() * 0.4 + 0.6;
-        this.width = this.spriteWidth*this.sizeModifier*1.5;
+        this.width = this.spriteWidth*this.sizeModifierS;
         this.height = this.spriteHeight*this.sizeModifier;
         this.x = Math.random() * (canvas.width - this.width);
         this.y = 0;

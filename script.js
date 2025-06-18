@@ -2,7 +2,8 @@ const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1050;
 canvas.height = 1450;
-let score = 100;
+let lifePoints = 100;
+let score = 0;
 ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
 let enemyInterval = 1000;
@@ -39,8 +40,8 @@ class Player {
         document.addEventListener("keyup", e => this.keys[e.key.toLowerCase()] = false);
         if (this.keys["w"]) this.y -= this.speed;
         if (this.keys["s"]) this.y += this.speed;
-        if (this.keys["a"]) this.x -= this.speed*2;
-        if (this.keys["d"]) this.x += this.speed*2;
+        if (this.keys["a"]) this.x -= this.speed;
+        if (this.keys["d"]) this.x += this.speed;
         if (this.keys[" "]) this.action = 1;
         else if (this.frame === 0)this.action = 0;
         if (this.action === 1) {
@@ -48,7 +49,7 @@ class Player {
                 const dx = enemy.x - this.x;
                 const dy = enemy.y - this.y;
                 const distance = Math.sqrt(dx*dx + dy*dy);
-                if (distance < enemy.height/3.5 + this.width/2) enemy.markedForDeletion = true;
+                if (distance < enemy.height/3.5 + this.width/2) enemy.isEnemyHit = true;
             });
         };
         this.timeSinceFrame += deltaTime;
@@ -90,17 +91,18 @@ class Enemy {
         this.y = 0;
         this.directionX = Math.random() * 5 - 2.5;
         this.directionY = Math.random() * 4 - 7;
+        this.isEnemyHit = false;
         this.markedForDeletion = false;
         this.frame = 0;
         this.maxFrame = 4;
         this.timeSinceFrame = 0;
         this.frameInterval = 100;
     }
-    update(deltaTime, score){
+    update(deltaTime, lifePoints){
         if (this.x < 0  || this.x > canvas.width - this.width){
             this.directionX *= -1;
         }
-        this.x -=this.directionX;
+        this.x -= this.directionX;
         this.y -= this.directionY;  
         if (this.y > canvas.height + this.height) {
             this.markedForDeletion = true;
@@ -121,29 +123,38 @@ class Enemy {
     }
 }
 
+function drawLifePoints(){
+    ctx.fillStyle = 'black';
+    ctx.fillText('LifePoints: ' + lifePoints, 20, 60);
+    ctx.fillStyle = 'white';
+    ctx.fillText('LifePoints: ' + lifePoints, 25, 65);
+}
 function drawScore(){
     ctx.fillStyle = 'black';
-    ctx.fillText('Score: ' + score, 20, 60);
+    ctx.fillText('Score: ' + score, 700, 60);
     ctx.fillStyle = 'white';
-    ctx.fillText('Score: ' + score, 25, 65);
+    ctx.fillText('Score: ' + score, 705, 65);
 }
 
 function animate(timestamp){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let deltaTime = timestamp - lastTime;
-    console.log(enemies.length);
     lastTime = timestamp;
     timeToNextEnemy += deltaTime;
     if (timeToNextEnemy > enemyInterval){
         enemies.push(new Enemy());
         timeToNextEnemy = 0;
     };
+    drawLifePoints();
     drawScore();
-    let qtdA = enemies.length;
     [...enemies].forEach(object => object.update(deltaTime));
     [...enemies].forEach(object => object.draw());
+    let qtdA = enemies.length;
+    enemies = enemies.filter(object => !object.isEnemyHit);
+    score += Math.abs(qtdA - enemies.length);
+    qtdA = enemies.length;
     enemies = enemies.filter(object => !object.markedForDeletion);
-    score -= Math.abs(qtdA - enemies.length);
+    lifePoints -= Math.abs(qtdA - enemies.length);
     player.update(deltaTime, enemies);
     player.draw();
     requestAnimationFrame(animate);

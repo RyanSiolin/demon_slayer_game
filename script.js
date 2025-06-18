@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1050;
-canvas.height = 1050;
+canvas.height = 1450;
 let score = 100;
 ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
@@ -16,7 +16,7 @@ class Player {
         this.image.src = 'tanjiro.png'
         this.spriteWidth = 100;
         this.spriteHeight = 100;
-        this.sizeModifier = 3;
+        this.sizeModifier = 2;
         this.width = this.spriteWidth * this.sizeModifier;
         this.height = this.spriteHeight * this.sizeModifier;
         this.y = 50;
@@ -48,7 +48,7 @@ class Player {
                 const dx = enemy.x - this.x;
                 const dy = enemy.y - this.y;
                 const distance = Math.sqrt(dx*dx + dy*dy);
-                if (distance < enemy.height/3 + this.width/4) enemy.markedForDeletion = true;
+                if (distance < enemy.height/3.5 + this.width/2) enemy.markedForDeletion = true;
             });
         };
         this.timeSinceFrame += deltaTime;
@@ -59,9 +59,8 @@ class Player {
         }
     }
     draw(){
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.beginPath();
-        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/3, 0, Math.PI*2);
+        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.height/2, 0, Math.PI*2);
         ctx.stroke();
         ctx.drawImage(this.image, this.frame * this.spriteWidth, this.action * this.spriteHeight, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);
@@ -74,7 +73,7 @@ class Smoke {
     constructor(){
         this.image = new Image();
         this.image.src = 'boom.png';
-
+        
     }
 }
 
@@ -85,7 +84,7 @@ class Enemy {
         this.spriteWidth = 293;
         this.spriteHeight = 155;
         this.sizeModifier = Math.random() * 0.4 + 0.6;
-        this.width = this.spriteWidth*this.sizeModifierS;
+        this.width = this.spriteWidth*this.sizeModifier;
         this.height = this.spriteHeight*this.sizeModifier;
         this.x = Math.random() * (canvas.width - this.width);
         this.y = 0;
@@ -114,9 +113,8 @@ class Enemy {
         }
     }
     draw(){
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.beginPath();
-        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/3, 0, Math.PI*2);
+        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/3.5, 0, Math.PI*2);
         ctx.stroke();
         ctx.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);

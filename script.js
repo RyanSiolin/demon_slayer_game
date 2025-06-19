@@ -10,6 +10,7 @@ let enemyInterval = 1000;
 let lastTime = 0;
 
 let enemies = [];
+let explosions = [];
 
 class Player {
     constructor(){
@@ -114,7 +115,7 @@ class Enemy {
         this.timeSinceFrame = 0;
         this.frameInterval = 100;
     }
-    update(deltaTime, lifePoints){
+    update(deltaTime){
         if (this.x < 0  || this.x > canvas.width - this.width){
             this.directionX *= -1;
         }
@@ -138,7 +139,37 @@ class Enemy {
             this.x, this.y, this.width, this.height);
     }
 }
+class DeathAnimation {
+    constructor(enemy) {
+        this.image = new Image();
+        this.image.src = 'boom.png';
+        this.spriteWidth = 200;
+        this.spriteHeight = 179;
+        this.x = enemy.x;
+        this.y = enemy.y;
+        this.sizeModifier = enemy.sizeModifier;
+        this.width = this.spriteWidth*this.sizeModifier;
+        this.height = this.spriteHeight*this.sizeModifier;
+        this.frame = 0;
+        this.maxFrame = 3;
+        this.timeSinceFrame = 0;
+        this.frameInterval = 100;
+        this.delete = false;
+    }
+    update(deltaTime) {
+        this.timeSinceFrame += deltaTime;
+        if (this.timeSinceFrame > this.frameInterval){
+            if (this.frame > this.maxFrame) this.delete = true;
+            else this.frame ++;
+            this.timeSinceFrame = 0;
+        }
+    }
+    draw(){
+        ctx.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, 
+            this.x, this.y, this.width, this.height);
 
+    }
+}
 function drawLifePoints(){
     ctx.fillStyle = 'black';
     ctx.fillText('LifePoints: ' + lifePoints, 20, 60);
@@ -172,8 +203,16 @@ function animate(timestamp){
     drawScore();
     [...enemies].forEach(object => object.update(deltaTime));
     [...enemies].forEach(object => object.draw());
+    [...enemies].forEach(object => {
+        if (object.isEnemyHit) {
+            explosions.push(new DeathAnimation(object));
+        }
+    });
     let qtdA = enemies.length;
     enemies = enemies.filter(object => !object.isEnemyHit);
+    [...explosions].forEach(object => object.update(deltaTime));
+    [...explosions].forEach(object => object.draw());
+    explosions = explosions.filter(object => !object.delete);
     score += Math.abs(qtdA - enemies.length);
     qtdA = enemies.length;
     enemies = enemies.filter(object => !object.markedForDeletion);

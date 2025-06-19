@@ -6,7 +6,7 @@ let lifePoints = 5;
 let score = 0;
 ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
-let enemyInterval = 1000;
+let enemyInterval = 2000;
 let lastTime = 0;
 let heart = new Image();
 heart.src = 'heart.png';
@@ -68,9 +68,6 @@ class Player {
         }
     }
     draw(){
-        ctx.beginPath();
-        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.height/2, 0, Math.PI*2);
-        ctx.stroke();
         ctx.drawImage(this.image, this.frame * this.spriteWidth, this.action * this.spriteHeight, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);
     }
@@ -134,9 +131,6 @@ class Enemy {
         }
     }
     draw(){
-        ctx.beginPath();
-        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/3.5, 0, Math.PI*2);
-        ctx.stroke();
         ctx.drawImage(this.image, this.frame * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, 
             this.x, this.y, this.width, this.height);
     }
@@ -226,6 +220,8 @@ function animate(timestamp){
     lifePoints -= Math.abs(qtdA - enemies.length);
     player.update(deltaTime, enemies);
     player.draw();
+    enemyInterval = (enemyInterval / (Math.floor(score/10) + 1))
+    console.log(enemyInterval);
 }
 
 animate(0);

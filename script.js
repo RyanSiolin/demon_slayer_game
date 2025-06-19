@@ -8,6 +8,7 @@ ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
 let enemyInterval = 2000;
 let lastTime = 0;
+let dificultyControl = false;
 let heart = new Image();
 heart.src = 'heart.png';
 
@@ -220,8 +221,12 @@ function animate(timestamp){
     lifePoints -= Math.abs(qtdA - enemies.length);
     player.update(deltaTime, enemies);
     player.draw();
-    enemyInterval = (enemyInterval / (Math.floor(score/10) + 1))
-    console.log(enemyInterval);
+    if (dificultyControl && score % 10 === 0) {
+        dificultyControl = false
+        enemyInterval = (enemyInterval * 0.8);
+    } else if (!dificultyControl && score % 10 != 0) {
+        dificultyControl = true;
+    }
 }
 
 animate(0);

@@ -139,7 +139,7 @@ class Enemy {
             this.x, this.y, this.width, this.height);
     }
 }
-class DeathAnimation {
+class Explosion {
     constructor(enemy) {
         this.image = new Image();
         this.image.src = 'boom.png';
@@ -155,8 +155,12 @@ class DeathAnimation {
         this.timeSinceFrame = 0;
         this.frameInterval = 100;
         this.delete = false;
+        this.sound = new Audio();
+        this.sound.src = 'boom.wav';
+        this.sound.volume = 0.5;
     }
     update(deltaTime) {
+        if (this.frame === 0) this.sound.play();
         this.timeSinceFrame += deltaTime;
         if (this.timeSinceFrame > this.frameInterval){
             if (this.frame > this.maxFrame) this.delete = true;
@@ -205,7 +209,7 @@ function animate(timestamp){
     [...enemies].forEach(object => object.draw());
     [...enemies].forEach(object => {
         if (object.isEnemyHit) {
-            explosions.push(new DeathAnimation(object));
+            explosions.push(new Explosion(object));
         }
     });
     let qtdA = enemies.length;

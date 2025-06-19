@@ -8,6 +8,8 @@ ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
 let enemyInterval = 1000;
 let lastTime = 0;
+let heart = new Image();
+heart.src = 'heart.png';
 
 let enemies = [];
 let explosions = [];
@@ -175,10 +177,11 @@ class Explosion {
     }
 }
 function drawLifePoints(){
+    ctx.drawImage(heart, 0, 0, 800, 800, 0, 0, 125, 125);
     ctx.fillStyle = 'black';
-    ctx.fillText('LifePoints: ' + lifePoints, 20, 60);
+    ctx.fillText(lifePoints, 40, 90);
     ctx.fillStyle = 'white';
-    ctx.fillText('LifePoints: ' + lifePoints, 25, 65);
+    ctx.fillText(lifePoints, 45, 95);
 }
 function drawScore(){
     ctx.fillStyle = 'black';

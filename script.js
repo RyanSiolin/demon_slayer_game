@@ -1,8 +1,8 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = 1050;
-canvas.height = 1450;
-let lifePoints = 100;
+canvas.height = 1400;
+let lifePoints = 5;
 let score = 0;
 ctx.font = '70px Impact';
 let timeToNextEnemy = 0;
@@ -17,12 +17,12 @@ class Player {
         this.image.src = 'tanjiro.png'
         this.spriteWidth = 100;
         this.spriteHeight = 100;
-        this.sizeModifier = 2;
+        this.sizeModifier = 1.5;
         this.width = this.spriteWidth * this.sizeModifier;
         this.height = this.spriteHeight * this.sizeModifier;
-        this.y = 50;
-        this.x = 250;
-        this.speed = 10;
+        this.y = 1100;
+        this.x = 425;
+        this.speed = 7;
         this.frame = 0;
         this.action = 0;
         this.maxFrame = 2;
@@ -34,6 +34,11 @@ class Player {
             's': false,
             'd': false
         };
+    }
+    restart(){
+        this.y = 50;
+        this.x = 250;
+        this.frame = 0;
     }
     update(deltaTime, enemies){
         document.addEventListener("keydown", e => this.keys[e.key.toLowerCase()] = true);
@@ -70,11 +75,15 @@ class Player {
 }
 let player = new Player();
 
-class Smoke {
+class Background{
     constructor(){
         this.image = new Image();
-        this.image.src = 'boom.png';
-        
+        this.image.src = 'background.jpg';
+        this.spriteWidth = 800;
+        this.spriteHeight = 1067;
+    }
+    draw(){
+        ctx.drawImage(this.image, 0, 0, this.spriteWidth, this.spriteHeight, 0, 0, this.spriteWidth*1.3125, this.spriteHeight*1.3125);
     }
 }
 
@@ -84,7 +93,7 @@ class Enemy {
         this.image.src = 'enemy1.png';
         this.spriteWidth = 293;
         this.spriteHeight = 155;
-        this.sizeModifier = Math.random() * 0.4 + 0.6;
+        this.sizeModifier = Math.random() * 0.4 + 0.3;
         this.width = this.spriteWidth*this.sizeModifier;
         this.height = this.spriteHeight*this.sizeModifier;
         this.x = Math.random() * (canvas.width - this.width);
@@ -134,10 +143,17 @@ function drawScore(){
     ctx.fillText('Score: ' + score, 700, 60);
     ctx.fillStyle = 'white';
     ctx.fillText('Score: ' + score, 705, 65);
+    if (lifePoints === 0) {
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'black';
+        ctx.fillText('FIM DE JOGO!', 525, 725);
+    }
 }
-
+let background = new Background();
 function animate(timestamp){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (lifePoints != 0) requestAnimationFrame(animate);
+    background.draw();
     let deltaTime = timestamp - lastTime;
     lastTime = timestamp;
     timeToNextEnemy += deltaTime;
@@ -157,7 +173,6 @@ function animate(timestamp){
     lifePoints -= Math.abs(qtdA - enemies.length);
     player.update(deltaTime, enemies);
     player.draw();
-    requestAnimationFrame(animate);
 }
 
 animate(0);

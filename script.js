@@ -90,10 +90,17 @@ class Background{
 class Enemy {
     constructor(){
         this.image = new Image();
-        this.image.src = 'enemy1.png';
-        this.spriteWidth = 293;
-        this.spriteHeight = 155;
-        this.sizeModifier = Math.random() * 0.4 + 0.3;
+        this.type = Math.round(Math.random()*3);
+        if (this.type === 0){
+            this.image.src = 'oni_sprite.png';
+        } else if (this.type === 1) {
+            this.image.src = 'oni_sprite1.png';
+        } else {
+            this.image.src = 'oni_sprite2.png';
+        }
+        this.spriteWidth = 100;
+        this.spriteHeight = 100;
+        this.sizeModifier = Math.random() * 2 +  0.8;
         this.width = this.spriteWidth*this.sizeModifier;
         this.height = this.spriteHeight*this.sizeModifier;
         this.x = Math.random() * (canvas.width - this.width);
@@ -103,7 +110,7 @@ class Enemy {
         this.isEnemyHit = false;
         this.markedForDeletion = false;
         this.frame = 0;
-        this.maxFrame = 4;
+        this.maxFrame = 2;
         this.timeSinceFrame = 0;
         this.frameInterval = 100;
     }

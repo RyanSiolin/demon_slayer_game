@@ -10,7 +10,7 @@ let enemyInterval = 2000;
 let lastTime = 0;
 let dificultyControl = false;
 let heart = new Image();
-heart.src = 'heart.png';
+heart.src = 'img/heart.png';
 
 let enemies = [];
 let explosions = [];
@@ -18,7 +18,7 @@ let explosions = [];
 class Player {
     constructor(){
         this.image = new Image();
-        this.image.src = 'tanjiro.png'
+        this.image.src = 'img/tanjiro.png'
         this.spriteWidth = 100;
         this.spriteHeight = 100;
         this.sizeModifier = 1.5;
@@ -79,7 +79,7 @@ let player = new Player();
 class Background{
     constructor(){
         this.image = new Image();
-        this.image.src = 'background.jpg';
+        this.image.src = 'img/background.jpg';
         this.spriteWidth = 800;
         this.spriteHeight = 1067;
     }
@@ -93,11 +93,11 @@ class Enemy {
         this.image = new Image();
         this.type = Math.round(Math.random()*3);
         if (this.type === 0){
-            this.image.src = 'oni_sprite.png';
+            this.image.src = 'img/oni_sprite.png';
         } else if (this.type === 1) {
-            this.image.src = 'oni_sprite1.png';
+            this.image.src = 'img/oni_sprite1.png';
         } else {
-            this.image.src = 'oni_sprite2.png';
+            this.image.src = 'img/oni_sprite2.png';
         }
         this.spriteWidth = 100;
         this.spriteHeight = 100;
@@ -139,7 +139,7 @@ class Enemy {
 class Explosion {
     constructor(enemy) {
         this.image = new Image();
-        this.image.src = 'boom.png';
+        this.image.src = 'img/boom.png';
         this.spriteWidth = 200;
         this.spriteHeight = 179;
         this.x = enemy.x;
